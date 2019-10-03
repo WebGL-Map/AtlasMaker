@@ -37,7 +37,10 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.util.*;
 
@@ -135,6 +138,14 @@ public class AtlasModule implements Module {
                     Files.createDirectories(atlas.toPath());
                 }
                 ImageIO.write(textureAtlas.getAtlas(), "png", atlas);
+                final File colorDir = new File(Atlas.FULL_TEMP_FOLDER_DIR + "/assets/minecraft/textures/colormap");
+                for (final File file : Objects.requireNonNull(colorDir.listFiles())) {
+                    FileChannel sourceChannel = new FileInputStream(file).getChannel();
+                    FileChannel destChannel = new FileOutputStream(new File(Atlas.FULL_TEMP_FOLDER_DIR + "/export/textures", file.getName())).getChannel();
+                    destChannel.transferFrom(sourceChannel, 0, sourceChannel.size());
+                    sourceChannel.close();
+                    destChannel.close();
+                }
             }
             if (Boolean.parseBoolean(useOpenGL)) {
                 textureSetup();

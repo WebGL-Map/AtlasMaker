@@ -119,8 +119,6 @@ public class ZipManager {
         final ZipOutputStream zipOut = new ZipOutputStream(fos);
         for (final File srcFile : files) {
             if (srcFile.isDirectory()) {
-                final ZipEntry dzipEntry = new ZipEntry(srcFile.getName() + File.separator);
-                zipOut.putNextEntry(dzipEntry);
                 for (final File file : Objects.requireNonNull(srcFile.listFiles())) {
                     final FileInputStream fis = new FileInputStream(file);
                     final ZipEntry zipEntry = new ZipEntry(srcFile.getName() + File.separator + file.getName());
